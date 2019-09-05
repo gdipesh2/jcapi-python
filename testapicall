@@ -1,0 +1,43 @@
+"""JumpCloud API v1 example."""
+
+import jcapiv1
+from jcapiv1.rest import ApiException
+
+API_KEY = "8b7d23277899894f8c5da6525b16cfa72dd185f1"
+SYSTEM_USER_ID = "test1"
+SYSTEM_USER_EMAIL = "Ytiroheso@coin-one.com"
+SYSTEM_USER_USERNAME = "test1"
+
+CONTENT_TYPE = "application/json"
+ACCEPT = "application/json"
+
+# Set up the configuration object with your API key for authorization
+CONFIGURATION = jcapiv1.Configuration()
+CONFIGURATION.api_key['x-api-key'] = API_KEY
+
+# Instantiate the API object for the group of endpoints you need to use,
+# for instance the system users API
+API_INSTANCE = jcapiv1.SystemusersApi(jcapiv1.ApiClient(CONFIGURATION))
+
+def list_users():
+    """Make an API call to retrieve all system users."""
+    try:
+        users = API_INSTANCE.systemusers_list(CONTENT_TYPE, ACCEPT)
+        print(users)
+    except ApiException as err:
+        print("Exception when calling SystemusersApi->systemusers_list: %s\n" % err)
+
+def update_user():
+    """Make an API call to update a system user."""
+    put_request = jcapiv1.Systemuserputpost(email=SYSTEM_USER_EMAIL, username=SYSTEM_USER_USERNAME)
+    put_request.lastname = "Updated Last Name"
+
+    try:
+        user = API_INSTANCE.systemusers_put(SYSTEM_USER_ID, CONTENT_TYPE, ACCEPT, body=put_request)
+        print(user)
+    except ApiException as err:
+        print("Exception when calling SystemusersApi->systemusers_put: %s\n" % err)
+
+if __name__ == "__main__":
+    list_users()
+    update_user()
